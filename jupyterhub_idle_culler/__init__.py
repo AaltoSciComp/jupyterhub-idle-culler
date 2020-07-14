@@ -183,6 +183,12 @@ def cull_idle(
         # if server['state']['profile_name'] == 'unlimited'
         #     return False
         # inactive_limit = server['state']['culltime']
+        state = server['state']
+        mem = state['child_conf']['req_memory']
+        profile = state.get('profile', None)    # from ProflieSpawner name (second argument)
+        cull_time = state['child_conf'].get('req_culltime', 10*365*24*60) # default one year or unlimited
+        inactive_limit = cull_time
+        app_log.info(f"CULL IDLE: {user['name']}/{server_name}: {mem} {cull_time} inactive={inactive} inactive_limit={inactive_limit} age={age} last_activity={server['last_activity']}")
 
         should_cull = (
             inactive is not None and inactive.total_seconds() >= inactive_limit
